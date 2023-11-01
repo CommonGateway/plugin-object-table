@@ -54,9 +54,11 @@ class ObjectTablePluginShortcodes
 
         $decodedBody = json_decode($responseBody, true);
 
-        var_dump($decodedBody);
+        if (array_key_exists('results', $decodedBody) === false) {
+            return '';
+        }
 
-        return $this->shortcodeResult($decodedBody);
+        return $this->shortcodeResult($decodedBody['results']);
     }
 
     /**
@@ -69,12 +71,12 @@ class ObjectTablePluginShortcodes
     private function shortcodeResult(?array $objects = []): string
     {
         if (empty($objects) || isset($objects[0]) === false) {
-            return '<div style="text-align: center">' . esc_html__('Er ging iets fout met het ophalen van data.', 'objecttableaddon') . '</div>';
+            return '<div>' . esc_html__('Er ging iets fout met het ophalen van data.', 'objecttableaddon') . '</div>';
         }
-
+    
         $headers = array_keys($objects[0]);
         $filteredHeaders = array_filter($headers, function($key) {
-            return strpos($key, '_') !== 0;
+            return strpos($key, '_') !== 0 && $key !== 'id';
         });
     
         $tableHeaderRow = '<tr>';
@@ -95,6 +97,6 @@ class ObjectTablePluginShortcodes
     
         $tableHtml = '<table>' . $tableHeaderRow . $tableBodyRows . '</table>';
         
-        return '<div style="text-align: center">' . $tableHtml . '</div>';
+        return '<div>' . $tableHtml . '</div>';
     }
 }
