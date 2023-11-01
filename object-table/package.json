@@ -1,8 +1,8 @@
 {
-  "name": "waardepapieren",
+  "name": "object-table",
   "version": "1.0.8",
-  "description": "Waardepapieren plugin",
-  "author": "Conduction.nl",
+  "description": "Object table plugin",
+  "author": "conduction.nl",
   "require" : {
     "php": "^7.4.0",
     "guzzlehttp/guzzle": "^6.3"

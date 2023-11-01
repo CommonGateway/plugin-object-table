@@ -1,17 +1,16 @@
 <?php
 
 /**
- * Waardepapieren
+ * Object table
  *
- * @package           WaardenpapierenPlugin
+ * @package           ObjectTablePlugin
  * @author            Conduction
- * @copyright         2020 Conduction
+ * @copyright         2023 Conduction
  * @license           GPL-2.0-or-later
  *
  * @wordpress-plugin
- * Plugin Name:       Waardepapieren
- * Plugin URI:        https://conduction.nl/waardepapieren
- * Description:       De waardepapieren plugin
+ * Plugin Name:       ObjectTable
+ * Description:       De object table plugin
  * Version:           1.0.8
  * Requires at least: 5.2
  * Requires PHP:      7.2
@@ -22,8 +21,8 @@
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  */
 
-use OWC\Waardepapieren\Autoloader;
-use OWC\Waardepapieren\Foundation\Plugin;
+use CommonGateway\ObjectTable\Autoloader;
+use CommonGateway\ObjectTable\Foundation\Plugin;
 
 /**
  * If this file is called directly, abort.

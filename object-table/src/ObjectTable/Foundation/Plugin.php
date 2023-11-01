@@ -1,6 +1,6 @@
 <?php
 
-namespace OWC\Waardepapieren\Foundation;
+namespace CommonGateway\ObjectTable\Foundation;
 
 class Plugin
 {
@@ -23,11 +23,8 @@ class Plugin
      */
     public function boot(): void
     {
-        new \OWC\Waardepapieren\Classes\WaardepapierenPluginShortcodes($this);
-        new \OWC\Waardepapieren\Classes\WaardepapierenPluginAdminSettings();
-        new \OWC\Waardepapieren\Classes\WaardepapierenPlugingGravityforms();
-        new \OWC\Waardepapieren\Classes\GFFieldWaardePapierType();
-        new \OWC\Waardepapieren\Classes\GFFieldWaardePapierPerson();
+        new \CommonGateway\ObjectTable\Classes\ObjectTablePluginShortcodes($this);
+        new \CommonGateway\ObjectTable\Classes\ObjectTablePluginAdminSettings();
     }
 
     /**

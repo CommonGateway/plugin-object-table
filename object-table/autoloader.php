@@ -1,6 +1,6 @@
 <?php
 
-namespace OWC\Waardepapieren;
+namespace CommonGateway\ObjectTable;
 
 class Autoloader
 {
@@ -15,7 +15,7 @@ class Autoloader
             $namespace  = str_replace('\\', '/', __NAMESPACE__);
             $className  = str_replace('\\', '/', $className);
             $class      = $baseDir . (empty($namespace) ? '' : $namespace . '/') . $className . '.php';
-            $class      = str_replace('/OWC/Waardepapieren/OWC/Waardepapieren/', '/Waardepapieren/', $class);
+            $class      = str_replace('/CommonGateway/ObjectTable/CommonGateway/ObjectTable/', '/ObjectTable/', $class);
 
             if (file_exists($class)) {
                 require_once $class;
