@@ -1,0 +1,69 @@
+/* admin-styles.css */
+
+.objecttable-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.objecttable-table th,
+.objecttable-table td {
+    border: 1px solid #ddd;
+    text-align: left;
+    padding: 8px;
+}
+
+.objecttable-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+.objecttable-form {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.objecttable-form-field-row {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 10px;
+}
+
+.objecttable-form-field,
+.objecttable-form-field-full,
+.objecttable-form-submit {
+    margin: 0 10px;
+}
+
+.objecttable-form-field {
+    flex: 1;
+    margin: 0 10px;
+    max-width: 25%; 
+}
+.objecttable-input,
+.objecttable-textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.objecttable-submit {
+    background-color: #0085ba;
+    border: none;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.objecttable-submit:hover {
+    background-color: #006799;
+}
