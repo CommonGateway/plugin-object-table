@@ -7,8 +7,9 @@ This plugin provides functionality for fetching and viewing objects. It is meant
 - Upload plugin .zip on the Plugins page. 
 - Activate plugin
 - Check the Settings -> ObjectTable page.
-- Configure the API Domain and API KEY fields.
-- Add a shortcode to a page of choice like: [object-table endpoint="/animals"]
+- Add a configuration with API URL and API KEY.
+- You can chose to add a optional mapping JSON for example {"name": "naam"}
+- Add a shortcode to a page of choice like: [object-table configId="2"] where configId is the id of one of your configurations on the settings page.
 - When visiting the page the shortcode will trigger code that fetches the data and renders a table. 
 
 ## Dependencies
