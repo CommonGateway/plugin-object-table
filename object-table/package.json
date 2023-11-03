@@ -1,10 +1,9 @@
 {
   "name": "object-table",
-  "version": "1.0.8",
+  "version": "1.0.0",
   "description": "Object table plugin",
   "author": "conduction.nl",
   "require" : {
-    "php": "^7.4.0",
-    "guzzlehttp/guzzle": "^6.3"
+    "php": "^7.4.0"
     }
   }

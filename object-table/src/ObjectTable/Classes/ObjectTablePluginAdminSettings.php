@@ -4,6 +4,7 @@ namespace CommonGateway\ObjectTable\Classes;
 
 class ObjectTablePluginAdminSettings
 {
+
     public function __construct()
     {
         // The Admin menu Item
@@ -58,29 +59,25 @@ class ObjectTablePluginAdminSettings
 
     public function handle_add_config()
     {
-        // Check user
         if (!current_user_can('manage_options')) {
             wp_die('Unauthorized user');
         }
         
-        // Get existing configs
         $configs = get_option('objecttable_configs', []);
         
         // Get the last used ID, or default to 0 if it doesn't exist
         $last_id = get_option('objecttable_last_id', 0);
         
-        // Increment the ID for the new config
         $new_id = $last_id + 1;
         
-        // Prepare new config data
         $new_config = [
             'id' => $new_id,
             'url' => sanitize_text_field($_POST['new_config_url']),
             'key' => sanitize_text_field($_POST['new_config_key']),
+            'cssclass' => sanitize_text_field($_POST['new_config_cssclass']),
             'mapping' => isset($_POST['new_config_mapping']) ? stripslashes($_POST['new_config_mapping']) : null 
         ];
         
-        // Add new config to the existing configs array
         $configs[] = $new_config;
         
         // Update the option in the database
@@ -97,7 +94,6 @@ class ObjectTablePluginAdminSettings
     
     public function objecttable_options_page_html()
     {
-        // Check user
         if (!current_user_can('manage_options')) {
             return;
         }
@@ -173,6 +169,9 @@ class ObjectTablePluginAdminSettings
         echo '<div class="objecttable-form-field">';
         echo '<input type="text" name="new_config_key" placeholder="API Key" class="objecttable-input" required>';
         echo '</div>';
+        echo '<div class="objecttable-form-field">';
+        echo '<input type="text" name="new_config_cssclass" placeholder="Table CSS class" class="objecttable-input">';
+        echo '</div>';
         echo '</div>';  
         echo '<div class="objecttable-form-field objecttable-form-field-full">'; 
         echo '<textarea name="new_config_mapping" placeholder="Mapping (JSON)" class="objecttable-textarea"></textarea>';
@@ -194,7 +193,8 @@ class ObjectTablePluginAdminSettings
         echo '<th>ID</th>';  
         echo '<th>API URL</th>';  
         echo '<th>API Key</th>';  
-        echo '<th>Mapping</th>';  // New column header
+        echo '<th>Table CSS class</th>';  
+        echo '<th>Mapping</th>';  
         echo '<th></th>';  
         echo '</tr>';
         echo '</thead>';
@@ -204,7 +204,8 @@ class ObjectTablePluginAdminSettings
             echo '<td>' . esc_html($config['id']) . '</td>';
             echo '<td>' . esc_html($config['url']) . '</td>';
             echo '<td>' . esc_html($config['key']) . '</td>';
-            echo '<td><pre>' . (isset($config['mapping']) ? esc_html($config['mapping']) : '') . '</pre></td>';  // New column data
+            echo '<td>' . (isset($config['cssclass']) ? esc_html($config['cssclass']) : '') .  '</td>';
+            echo '<td>' . (isset($config['mapping']) ? esc_html($config['mapping']) : '') . '</td>'; 
             echo '<td>';
             echo '<form method="post" action="' . admin_url('admin-post.php') . '">';
             echo '<input type="hidden" name="action" value="objecttable_remove_config">';

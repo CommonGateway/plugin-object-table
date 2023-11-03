@@ -22,9 +22,9 @@ class ObjectTablePluginShortcodes
     {
         wp_enqueue_style(
             'objecttable-styles',
-            plugin_dir_url(dirname(__FILE__, 3)) . 'src/ObjectTable/assets/css/style.css',
+            plugin_dir_url(dirname(__FILE__, 3)) . 'src/ObjectTable/assets/css/table-styles.css',
             array(),
-            filemtime(plugin_dir_path(dirname(__FILE__, 3)) . 'src/ObjectTable/assets/css/style.css') 
+            filemtime(plugin_dir_path(dirname(__FILE__, 3)) . 'src/ObjectTable/assets/css/table-styles.css') 
         );
     }
 
@@ -72,8 +72,9 @@ class ObjectTablePluginShortcodes
         }
 
         $mapping = isset($config['mapping']) ? json_decode($config['mapping'], true) : null;
+        $tableCSSClass = isset($config['cssclass']) ? $config['cssclass'] : null;
 
-        return $this->shortcodeResult($decodedBody['results'], $mapping);
+        return $this->shortcodeResult($decodedBody['results'], $mapping, $tableCSSClass);
     }
 
     private function fetchData(string $url, string $apiKey)
@@ -110,7 +111,7 @@ class ObjectTablePluginShortcodes
      *
      * @return string
      */
-    private function shortcodeResult(?array $objects = [], ?array $mapping = null): string
+    private function shortcodeResult(?array $objects = [], ?array $mapping = null, ?string $tableCSSClass = null): string
     {
         if (empty($objects) || isset($objects[0]) === false) {
             return '<div>' . esc_html__('Er ging iets fout met het ophalen van data.', 'objecttableaddon') . '</div>';
@@ -118,10 +119,13 @@ class ObjectTablePluginShortcodes
 
         $filteredHeaders = [];
         $tableHeaderRow  = $this->createTableHeader($objects, $mapping, $filteredHeaders);
-
         $tableBodyRows   = $this->createTableRows($objects, $filteredHeaders);
 
-        $tableHtml = '<div class="table-container"><table>' . $tableHeaderRow . $tableBodyRows . '</table></div>';
+        if ($tableCSSClass === null) {
+            $tableCSSClass = "table-container";
+        }
+
+        $tableHtml = "<div class=\"$tableCSSClass\"><table>$tableHeaderRow $tableBodyRows</table></div>";
 
         return '<div>' . $tableHtml . '</div>';
     }
@@ -171,7 +175,7 @@ class ObjectTablePluginShortcodes
         foreach ($objects as $object) {
             $tableBodyRow = '<tr>';
             foreach ($filteredHeaders as $header) {
-                $value = isset($object[$header]) ? $object[$header] : '';  // Check if key exists
+                $value = isset($object[$header]) ? $object[$header] : '';  
                 if (is_array($value)) {
                     $value = json_encode($value);
                 }
