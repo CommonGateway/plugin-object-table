@@ -125,7 +125,7 @@ class ObjectTablePluginShortcodes
             $tableCSSClass = "table-container";
         }
 
-        $tableHtml = "<div class=\"$tableCSSClass\"><table>$tableHeaderRow $tableBodyRows</table></div>";
+        $tableHtml = "<div class=\"$tableCSSClass\"><table><thead>$tableHeaderRow </thead><tbody> $tableBodyRows</tbody></table></div>";
 
         return '<div>' . $tableHtml . '</div>';
     }
