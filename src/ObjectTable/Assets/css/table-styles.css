@@ -51,6 +51,10 @@
     color: white;
 }
 
+.barendrecht-table-container tr:nth-child(odd) {
+    background-color: #ffffff;
+}
+
 .barendrecht-table-container tr:nth-child(even) {
     background-color: #f2f2f2;
 }
