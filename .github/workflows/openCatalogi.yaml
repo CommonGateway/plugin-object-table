@@ -1,0 +1,35 @@
+name: My Open Catalogi Workflow
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create or Update publiccode.yaml
+        uses: OpenCatalogi/publiccode-action@1.1.1
+        with:
+          opencatalogi: true
+      - name: Create an Open Catalogi page
+        uses: OpenCatalogi/opencatalogi-action@1.1.1
+        with:
+          nl_design_theme_classname: 'open-webconcept-theme'
+          pull_from_branche: 'development'
+          start_page: 'https://raw.githubusercontent.com/CommonGateway/plugin-object-table/master/README.md'
+          favicon_logo: 'https://openwebconcept.nl/wp-content/themes/openwebconcept/assets/src/images/logo@2x.png'
+          navbar_logo: 'https://openwebconcept.nl/wp-content/themes/openwebconcept/assets/src/images/logo@2x.png'
+          footer_logo: 'https://openwebconcept.nl/wp-content/themes/openwebconcept/assets/src/images/logo@2x.png'
+          page_title: "Open Webconcept | Object Table Plugin"
+          jumbotron_title: "Object Table Plugin"
+          jumbotron_subtitle: "Wordpress tabbelen voor overige objecten"
+          jumbotron_description: "Tadaaaaa"
+          jumbotron_image_placement: "right"
+          jumbotron_image_url: "https://raw.githubusercontent.com/OpenWebconcept/.github/main/docs/componenten.svg"
+          jumbotron_searchform: false
