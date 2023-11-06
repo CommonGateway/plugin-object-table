@@ -30,7 +30,8 @@ jobs:
           page_title: "Open Webconcept | Object Table Plugin"
           jumbotron_title: "Object Table Plugin"
           jumbotron_subtitle: "Wordpress tabbelen voor overige objecten"
-          jumbotron_description: "Tadaaaaa"
+          jumbotron_description: "
+De Objecten Tabellen plugin voor WordPress faciliteert Nederlandse gemeenten bij het publiceren van dynamische en actuele gegevens vanuit hun datawarehouses op hun websites, conform de Overige Objecten Standaard van de VNG. Deze efficiënte tool automatiseert de presentatie van gegevens in tabellen, vereenvoudigt contentbeheer en verbetert de toegankelijkheid van betrouwbare informatie voor burgers, waardoor transparantie en betrokkenheid worden verhoogd."
           jumbotron_image_placement: "right"
           jumbotron_image_url: "https://raw.githubusercontent.com/CommonGateway/plugin-object-table/master/docs/OWC_object_table.png"
           jumbotron_searchform: false
