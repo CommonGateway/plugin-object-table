@@ -51,9 +51,9 @@ class ObjectTablePluginAdminSettings
     {
         wp_enqueue_style(
             'objecttable-admin-styles',
-            plugin_dir_url(dirname(__FILE__, 3)) . 'src/ObjectTable/assets/css/admin-styles.css',
+            plugin_dir_url(dirname(__FILE__, 3)) . 'src/ObjectTable/Assets/css/admin-styles.css',
             array(),
-            filemtime(plugin_dir_path(dirname(__FILE__, 3)) . 'src/ObjectTable/assets/css/admin-styles.css') 
+            filemtime(plugin_dir_path(dirname(__FILE__, 3)) . 'src/ObjectTable/Assets/css/admin-styles.css') 
         );
     }
 

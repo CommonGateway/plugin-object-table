@@ -22,9 +22,9 @@ class ObjectTablePluginShortcodes
     {
         wp_enqueue_style(
             'objecttable-styles',
-            plugin_dir_url(dirname(__FILE__, 3)) . 'src/ObjectTable/assets/css/table-styles.css',
+            plugin_dir_url(dirname(__FILE__, 3)) . 'src/ObjectTable/Assets/css/table-styles.css',
             array(),
-            filemtime(plugin_dir_path(dirname(__FILE__, 3)) . 'src/ObjectTable/assets/css/table-styles.css') 
+            filemtime(plugin_dir_path(dirname(__FILE__, 3)) . 'src/ObjectTable/Assets/css/table-styles.css') 
         );
     }
 
