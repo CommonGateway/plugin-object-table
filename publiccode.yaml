@@ -1,0 +1,49 @@
+categories:
+- it-development
+description:
+  en:
+    apiDocumentation: ''
+    awards: []
+    documentation: ''
+    features: []
+    genericName: This plugin adds shortcodes which get data from a CommonGateway instance
+      and shows a table for the retrieved data.
+    localisedName: ''
+    longDescription: ''
+    screenshots: []
+    shortDescription: ''
+    videos: []
+developmentStatus: development
+landingURL: ''
+legal:
+  authorsFile: ''
+  license: ''
+  mainCopyrightOwner: ''
+  repoOwner: ''
+localisation:
+  availableLanguages:
+  - en
+  localisationReady: false
+maintenance:
+  contacts: []
+  contractors: []
+  type: none
+name: plugin-object-table
+nl:
+  vng:
+    commonground: []
+    gemma: []
+organisation:
+  description: The common gateway
+  logo: https://avatars.githubusercontent.com/u/106860777?v=4
+  name: CommonGateway
+  url: CommonGateway
+platforms:
+- web
+publiccodeYmlVersion: '0.2'
+releaseDate: '2023-11-06'
+roadmap: ''
+softwareType: standalone/web
+softwareVersion: ''
+url: https://github.com/CommonGateway/plugin-object-table
+usedBy: []
