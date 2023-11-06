@@ -1,18 +1,22 @@
-Description
-----
-This plugin provides functionality for fetching and viewing objects in a table. It is meant to be use with the CommonGateway.
+# Objecten Tabelen
+Het publiceren van dynamische tabellen in WordPress aan de hand van de Overige Objecten Standaard van de VNG (Vereniging van Nederlandse Gemeenten) stelt gemeenten in staat om eenvoudig en efficiënt gegevens uit hun datawarehouse te publiceren op hun websites. Door gebruik te maken van deze standaard, kunnen gemeenten gestructureerde data naadloos integreren in hun WordPress-sites, waarbij de gegevens dynamisch worden bijgewerkt om actuele en accurate informatie weer te geven. Dit proces automatiseert de dataflow, vermindert de kans op fouten, en zorgt voor consistentie in de gegevenspresentatie, waardoor burgers toegang krijgen tot betrouwbare en up-to-date informatie.
 
-## How to use
+Deze aanpak biedt aanzienlijke voordelen voor zowel gemeenten als burgers. Voor gemeenten betekent het een vereenvoudiging van het beheer van online content, waarbij tijdrovende handmatige updates worden geëlimineerd. Burgers profiteren van een verbeterde toegang tot informatie, waardoor de transparantie en de dienstverlening van de gemeente worden verhoogd. Door het gebruik van dynamische tabellen kunnen gegevens zoals gemeentelijke voorzieningen, projectupdates, statistieken, en meer, direct en op een gebruiksvriendelijke manier worden gepresenteerd, wat bijdraagt aan een beter geïnformeerde en betrokken gemeenschap.
 
-- Upload plugin .zip on the Plugins page. 
-- Activate plugin
-- Check the Settings -> ObjectTable page.
-- Add a configuration with API URL and API KEY.
-- You can also choose to add a css class to the table if there is one.
-- You can choose to add a optional mapping JSON for example {"name": "naam"}
-- Add a shortcode to a page of choice like: [object-table configId="2"] where configId is the id of one of your configurations on the settings page.
-- When visiting the page the shortcode will trigger code that fetches the data and renders a table. 
+## Hoe te gebruiken
+Upload de plugin .zip op de Plugins-pagina.
+Activeer de plugin.
+Ga naar Instellingen -> ObjectTabel-pagina.
+Voeg een configuratie toe met API URL en API KEY.
+U kunt ervoor kiezen om een CSS-klasse toe te voegen aan de tabel als er een is.
+U kunt kiezen om een optionele mapping JSON toe te voegen, bijvoorbeeld {"name": "naam"}.
+Voeg een shortcode toe aan een gewenste pagina zoals: [object-tabel configId="2"], waarbij configId de id is van een van uw configuraties op de instellingenpagina.
+Bij het bezoeken van de pagina zal de shortcode code activeren die de gegevens ophaalt en een tabel weergeeft.
+Afhankelijkheden
+U hebt autorisatiegegevens en eindpunten nodig van een CommonGateway-instantie of een andere gegevensbron om gegevens van op te halen.
 
-## Dependencies
+## Bijdragen en Ondersteuning
+Voor bijdragen en ondersteuning volgen we de spelregels van de Foundation for Public Code. Uw bijdragen zijn welkom via onze GitHub repository.
 
-You will need authorization credentials and endpoints from a CommonGateway instance or any other data source to fetch data from.
+## Licentie
+Deze plugin wordt vrijgegeven onder de EUPL 1.2 licentie.
