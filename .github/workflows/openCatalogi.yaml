@@ -32,5 +32,5 @@ jobs:
           jumbotron_subtitle: "Wordpress tabbelen voor overige objecten"
           jumbotron_description: "Tadaaaaa"
           jumbotron_image_placement: "right"
-          jumbotron_image_url: "https://raw.githubusercontent.com/CommonGateway/plugin-object-table/blob/master/docs/OWC_object_table.png"
+          jumbotron_image_url: "https://raw.githubusercontent.com/CommonGateway/plugin-object-table/master/docs/OWC_object_table.png"
           jumbotron_searchform: false
