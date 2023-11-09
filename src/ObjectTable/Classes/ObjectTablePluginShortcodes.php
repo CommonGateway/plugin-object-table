@@ -44,13 +44,11 @@ class ObjectTablePluginShortcodes
     }
 
     public function objecttable_handle_sort() {
-        $requiredFields = ['sort_column', 'sort_order', 'config_id'];
-        foreach ($requiredFields as $field) {
-            if (isset($_POST[$field]) === false) {
-                wp_send_json_error(['message' => "$field not given"]);
-            }
+        if ((isset($_POST['sort_column']) === false && isset($_POST['sort_order']) === false) || isset($_POST['search_term']) === false) {
+            wp_send_json_error(['message' => "No sort column, order or search term given"]);
         }
 
+        $search = $_POST['search_term'];
         $column = $_POST['sort_column'];
         $order = $_POST['sort_order'];
         $configId = $_POST['config_id'];
@@ -65,8 +63,9 @@ class ObjectTablePluginShortcodes
         }
 
         $sort = "_order[$column]=$order";
+        $search = "_search=$search";
 
-        $decodedBody = $this->fetchData($config['url'], $config['key'], $sort);
+        $decodedBody = $this->fetchData($config['url'], $config['key'], $sort, $search);
         // Return error.
         if (is_string($decodedBody) === true) {
             wp_send_json_error(['message' => $decodedBody]);
@@ -127,11 +126,14 @@ class ObjectTablePluginShortcodes
         return null;
     }
 
-    private function fetchData(string $url, string $apiKey, ?string $sort = null)
+    private function fetchData(string $url, string $apiKey, ?string $order = null, ?string $search = null)
     {
         $url .= '?_limit=1000';
-        if ($sort) {
-            $url .= "&amp;$sort";
+        if ($order) {
+            $url .= "&amp;$order";
+        }
+        if ($search) {
+            $url .= "&amp;$search";
         }
 
         $url = html_entity_decode($url);
@@ -180,7 +182,7 @@ class ObjectTablePluginShortcodes
             $tableCSSClass = "table-container";
         }
 
-        $tableHtml = "<table class=\"$tableCSSClass\" id=\"objectTable$configId\"><thead>$tableHeaderRow </thead><tbody> $tableBodyRows</tbody></table>";
+        $tableHtml = "<div><input type=\"text\" id=\"searchInput{$configId}\" class=\"search-input\" placeholder=\"Zoeken...\" \><table class=\"$tableCSSClass\" id=\"objectTable$configId\"><thead>$tableHeaderRow </thead><tbody> $tableBodyRows</tbody></table></div>";
 
         return $tableHtml;
     }
