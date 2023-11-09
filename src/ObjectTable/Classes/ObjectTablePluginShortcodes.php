@@ -14,23 +14,71 @@ class ObjectTablePluginShortcodes
         $this->plugin = $plugin;
         $this->add_shortcode();
 
-        // Use css
-        add_action('wp_enqueue_scripts', [$this, 'enqueue_styles']);
+        add_action('wp_ajax_object_handle_sort', [$this, 'objecttable_handle_sort']);
+
+        // Use js and css
+        add_action('wp_enqueue_scripts', [$this, 'enqueue_assets']);
     }
 
-    public function enqueue_styles()
-    {
+    public function enqueue_assets() {
         wp_enqueue_style(
             'objecttable-styles',
             plugin_dir_url(dirname(__FILE__, 3)) . 'src/ObjectTable/Assets/css/table-styles.css',
             array(),
             time()
         );
+    
+        wp_enqueue_script('jquery');
+        wp_enqueue_script(
+            'myplugin-script',
+            plugin_dir_url(dirname(__FILE__, 3)) . 'src/ObjectTable/Assets/js/object-table.js',
+            array('jquery'),
+            time(),
+            true
+        );
     }
 
     private function add_shortcode(): void
     {
         add_shortcode('object-table', [$this, 'objecttable_result_shortcode']);
+    }
+
+    public function objecttable_handle_sort() {
+        $requiredFields = ['sort_column', 'sort_order', 'config_id'];
+        foreach ($requiredFields as $field) {
+            if (isset($_POST[$field]) === false) {
+                wp_send_json_error(['message' => "$field not given"]);
+            }
+        }
+
+        $column = $_POST['sort_column'];
+        $order = $_POST['sort_order'];
+        $configId = $_POST['config_id'];
+
+        $config = $this->getConfig($configId);
+        $mapping = isset($config['mapping']) ? json_decode($config['mapping'], true) : null;
+        // Map the column back;
+        foreach ($mapping as $key => $value) {
+            if ($key === $column) {
+                $column = $value;
+            }
+        }
+
+        $sort = "_order[$column]=$order";
+
+        $decodedBody = $this->fetchData($config['url'], $config['key'], $sort);
+        // Return error.
+        if (is_string($decodedBody) === true) {
+            wp_send_json_error(['message' => $decodedBody]);
+        }
+        $tableCSSClass = isset($config['cssclass']) ? $config['cssclass'] : null;
+
+        $html = $this->generateHTMLTable($decodedBody['results'], $mapping, $tableCSSClass, $configId);
+        $newRows = explode('<tbody>', $html)[1];
+        $newRows = explode('</tbody>', $newRows)[0];
+
+        // Send JSON response back to AJAX call
+        wp_send_json_success(['html' => $newRows]);
     }
 
     /**
@@ -45,21 +93,11 @@ class ObjectTablePluginShortcodes
         if (empty($configId) === true) {
             return '<p>No configId given to shortcode.</p>';
         }
-
-        $correctConfig = null;
-        $configs = get_option('objecttable_configs', []);
-        foreach ($configs as $config) {
-            if ($config['id'] == $configId) { 
-                $correctConfig = $config;
-                break;
-            }
-        }
-
-        if (isset($correctConfig) === false) {
+        
+        $config = $this->getConfig($configId);  
+        if ($config === null) {
             return '<p>Could not find a configuration with given id.</p>';
-        }
-
-        $config = $correctConfig;        
+        }      
 
         if (isset($config['url']) === false || isset($config['key']) === false) {
             return '<p>Configuration has no url or api key.</p>';
@@ -74,12 +112,29 @@ class ObjectTablePluginShortcodes
         $mapping = isset($config['mapping']) ? json_decode($config['mapping'], true) : null;
         $tableCSSClass = isset($config['cssclass']) ? $config['cssclass'] : null;
 
-        return $this->shortcodeResult($decodedBody['results'], $mapping, $tableCSSClass);
+        return $this->generateHTMLTable($decodedBody['results'], $mapping, $tableCSSClass, $configId);
     }
 
-    private function fetchData(string $url, string $apiKey)
+    private function getConfig(string $configId)
+    {
+        $configs = get_option('objecttable_configs', []);
+        foreach ($configs as $config) {
+            if ($config['id'] == $configId) { 
+                return $config;
+            }
+        }
+
+        return null;
+    }
+
+    private function fetchData(string $url, string $apiKey, ?string $sort = null)
     {
         $url .= '?_limit=1000';
+        if ($sort) {
+            $url .= "&amp;$sort";
+        }
+
+        $url = html_entity_decode($url);
 
         $data = wp_remote_get($url, [
             'headers'     => ['Content-Type' => 'application/json;', 'Authorization' => $apiKey]
@@ -97,7 +152,7 @@ class ObjectTablePluginShortcodes
 
         $decodedBody = json_decode($responseBody, true);
 
-        if (array_key_exists('results', $decodedBody) === false) {
+        if (isset($decodedBody) === false || array_key_exists('results', $decodedBody) === false) {
             return '<p>Error decoding data.</p>';
         }
 
@@ -111,26 +166,26 @@ class ObjectTablePluginShortcodes
      *
      * @return string
      */
-    private function shortcodeResult(?array $objects = [], ?array $mapping = null, ?string $tableCSSClass = null): string
+    private function generateHTMLTable(?array $objects = [], ?array $mapping = null, ?string $tableCSSClass = null, string $configId): string
     {
         if (empty($objects) || isset($objects[0]) === false) {
             return '<div>' . esc_html__('Er ging iets fout met het ophalen van data.', 'objecttableaddon') . '</div>';
         }
 
         $filteredHeaders = [];
-        $tableHeaderRow  = $this->createTableHeader($objects, $mapping, $filteredHeaders);
+        $tableHeaderRow  = $this->createTableHeader($objects, $mapping, $filteredHeaders, $configId);
         $tableBodyRows   = $this->createTableRows($objects, $filteredHeaders);
 
         if ($tableCSSClass === null) {
             $tableCSSClass = "table-container";
         }
 
-        $tableHtml = "<div class=\"$tableCSSClass\"><table><thead>$tableHeaderRow </thead><tbody> $tableBodyRows</tbody></table></div>";
+        $tableHtml = "<table class=\"$tableCSSClass\" id=\"objectTable$configId\"><thead>$tableHeaderRow </thead><tbody> $tableBodyRows</tbody></table>";
 
-        return '<div>' . $tableHtml . '</div>';
+        return $tableHtml;
     }
 
-    private function createTableHeader(?array &$objects = [], ?array $mapping = null, array &$filteredHeaders): string
+    private function createTableHeader(?array &$objects = [], ?array $mapping = null, array &$filteredHeaders, string $configId): string
     {
         // Initial filtering of headers
         $headers = array_keys($objects[0]);
@@ -161,8 +216,9 @@ class ObjectTablePluginShortcodes
         }
 
         $tableHeaderRow = '<tr>';
+        $thId = "table{$configId}Header_";
         foreach ($filteredHeaders as $header) {
-            $tableHeaderRow .= "<th>{$header}</th>";
+            $tableHeaderRow .= "<th id=\"{$thId}{$header}\">{$header}<span class=\"dashicons dashicons-sort\"></span></th>";
         }
         $tableHeaderRow .= '</tr>';
 

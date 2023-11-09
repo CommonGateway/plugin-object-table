@@ -1,9 +1,5 @@
 .table-container {
     width: 100%;
-}
-
-.table-container table {
-    width: 100%;
     border-collapse: collapse;
 }
 
@@ -12,6 +8,16 @@
     border: 1px solid #ddd;
     text-align: left;
     padding: 8px;
+}
+
+.table-container th span {
+    margin-top: 5px;
+    margin-right: 10px;
+    float: right;
+}    
+
+.table-container span:hover {
+    cursor: pointer; 
 }
 
 .table-container tr:nth-child {
@@ -26,10 +32,6 @@
 
 /** Barendrecht */
 .barendrecht-table-container {
-    width: 100%;
-}
-
-.barendrecht-table-container table {
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
@@ -49,6 +51,16 @@
     border: 1px solid #032d57;
     background-color: #032d57;
     color: white;
+} 
+
+.barendrecht-table-container th span {
+    margin-top: 5px;
+    margin-right: 10px;
+    float: right;
+}    
+
+.barendrecht-table-container th span:hover {
+    cursor: pointer; 
 }
 
 .barendrecht-table-container tr:nth-child(odd) {
