@@ -13,7 +13,6 @@ class ObjectTablePluginShortcodes
     {
         $this->plugin = $plugin;
         $this->add_shortcode();
-
         // For logged-in users:
         add_action('wp_ajax_object_handle_sort', [$this, 'objecttable_handle_sort']);
         // For non-logged-in users:
@@ -30,6 +29,7 @@ class ObjectTablePluginShortcodes
             array(),
             time()
         );
+        wp_enqueue_style('dashicons');
     
         wp_enqueue_script('jquery');
         wp_enqueue_script(
@@ -148,7 +148,7 @@ class ObjectTablePluginShortcodes
 
     private function fetchData(string $url, string $apiKey, ?string $order = null, ?string $search = null, ?int $page = 1)
     {
-        // Add query parameters to url.
+        // Add query params to url.
         $url .= '?_limit=20';
         if ($order) {
             $url .= "&$order";
@@ -193,9 +193,9 @@ class ObjectTablePluginShortcodes
     private function generatePaginationHTML(string $configId): string
     {
         $paginationHTML = "<div class=\"table-pagination\">";
-        $paginationHTML .= "<a id=\"tablePaginationPrevious{$configId}\" class=\"table-pagination-previous\" href=\"#\"><span class=\"dashicons dashicons-arrow-left-alt2\"></span> Vorige</a>";
+        $paginationHTML .= "<a id=\"tablePaginationPrevious{$configId}\" class=\"table-pagination-previous\" href=\"#\">Vorige</a>";
         $paginationHTML .= "<a id=\"tablePaginationCurrent{$configId}\" class=\"table-pagination-current\" href=\"#\">1</a>";
-        $paginationHTML .= "<a id=\"tablePaginationNext{$configId}\" class=\"table-pagination-next\" href=\"#\">Volgende <span class=\"dashicons dashicons-arrow-right-alt2\"></span></a>";
+        $paginationHTML .= "<a id=\"tablePaginationNext{$configId}\" class=\"table-pagination-next\" href=\"#\">Volgende</a>";
         $paginationHTML .= "</div>";
 
         return $paginationHTML;
