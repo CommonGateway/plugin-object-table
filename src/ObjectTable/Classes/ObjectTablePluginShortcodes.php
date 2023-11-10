@@ -14,7 +14,10 @@ class ObjectTablePluginShortcodes
         $this->plugin = $plugin;
         $this->add_shortcode();
 
+        // For logged-in users:
         add_action('wp_ajax_object_handle_sort', [$this, 'objecttable_handle_sort']);
+        // For non-logged-in users:
+        add_action('wp_ajax_nopriv_object_handle_sort', [$this, 'objecttable_handle_sort']);
 
         // Use js and css
         add_action('wp_enqueue_scripts', [$this, 'enqueue_assets']);
@@ -44,17 +47,20 @@ class ObjectTablePluginShortcodes
     }
 
     public function objecttable_handle_sort() {
-        if ((isset($_POST['sort_column']) === false && isset($_POST['sort_order']) === false) || isset($_POST['search_term']) === false) {
-            wp_send_json_error(['message' => "No sort column, order or search term given"]);
+        if ((isset($_POST['sort_column']) === false && isset($_POST['sort_order']) === false) && isset($_POST['search_term']) === false 
+        && isset($_POST['page']) === false || isset($_POST['config_id']) === false) {
+            wp_send_json_error(['message' => "No sort column, order, search term or page given"]);
         }
 
-        $search = $_POST['search_term'];
-        $column = $_POST['sort_column'];
-        $order = $_POST['sort_order'];
-        $configId = $_POST['config_id'];
+        $search     = $_POST['search_term'];
+        $column     = $_POST['sort_column'];
+        $order      = $_POST['sort_order'];
+        $configId   = $_POST['config_id'];
+        $page       = $_POST['page'];
 
         $config = $this->getConfig($configId);
         $mapping = isset($config['mapping']) ? json_decode($config['mapping'], true) : null;
+
         // Map the column back;
         foreach ($mapping as $key => $value) {
             if ($key === $column) {
@@ -65,16 +71,30 @@ class ObjectTablePluginShortcodes
         $sort = "_order[$column]=$order";
         $search = "_search=$search";
 
-        $decodedBody = $this->fetchData($config['url'], $config['key'], $sort, $search);
+        $decodedBody = $this->fetchData($config['url'], $config['key'], $sort, $search, $page);
         // Return error.
         if (is_string($decodedBody) === true) {
             wp_send_json_error(['message' => $decodedBody]);
         }
         $tableCSSClass = isset($config['cssclass']) ? $config['cssclass'] : null;
 
-        $html = $this->generateHTMLTable($decodedBody['results'], $mapping, $tableCSSClass, $configId);
-        $newRows = explode('<tbody>', $html)[1];
-        $newRows = explode('</tbody>', $newRows)[0];
+        $html = $this->generateHTMLTable($configId, $decodedBody, $mapping, $tableCSSClass, true);
+
+        // For when no results are found with given options.
+        if ($html === ' ') {
+            wp_send_json_success(['html' => ' ']);
+        }
+
+        $newRows = explode('<tbody>', $html);
+        if (isset($newRows[1]) === false) {
+            wp_send_json_error(['message' => 'Cant explode tbody from table html']);
+        }
+        $newRows = $newRows[1];
+        $newRows = explode('</tbody>', $newRows);
+        if (isset($newRows[0]) === false) {
+            wp_send_json_error(['message' => 'Cant explode tbody from table html']);
+        }
+        $newRows = $newRows[0];
 
         // Send JSON response back to AJAX call
         wp_send_json_success(['html' => $newRows]);
@@ -111,7 +131,7 @@ class ObjectTablePluginShortcodes
         $mapping = isset($config['mapping']) ? json_decode($config['mapping'], true) : null;
         $tableCSSClass = isset($config['cssclass']) ? $config['cssclass'] : null;
 
-        return $this->generateHTMLTable($decodedBody['results'], $mapping, $tableCSSClass, $configId);
+        return $this->generateHTMLTable($configId, $decodedBody, $mapping, $tableCSSClass);
     }
 
     private function getConfig(string $configId)
@@ -126,29 +146,31 @@ class ObjectTablePluginShortcodes
         return null;
     }
 
-    private function fetchData(string $url, string $apiKey, ?string $order = null, ?string $search = null)
+    private function fetchData(string $url, string $apiKey, ?string $order = null, ?string $search = null, ?int $page = 1)
     {
-        $url .= '?_limit=1000';
+        // Add query parameters to url.
+        $url .= '?_limit=20';
         if ($order) {
-            $url .= "&amp;$order";
+            $url .= "&$order";
         }
         if ($search) {
-            $url .= "&amp;$search";
+            $url .= "&$search";
         }
-
-        $url = html_entity_decode($url);
+        $url .= "&page={$page}";
 
         $data = wp_remote_get($url, [
             'headers'     => ['Content-Type' => 'application/json;', 'Authorization' => $apiKey]
         ]);
 
         if (is_wp_error($data)) {
+            error_log($data->get_error_message());
             return '<p>Error retrieving data.</p>';
         }
 
         $responseBody = wp_remote_retrieve_body($data);
 
         if (is_wp_error($responseBody)) {
+            error_log($responseBody->get_error_message());
             return '<p>Error retrieving data.</p>';
         }
 
@@ -162,32 +184,66 @@ class ObjectTablePluginShortcodes
     }
 
     /**
-     * Create html table for the result of the shortcode.
+     * Create a html pagination for the table.
      *
-     * @param array $objects
+     * @param array $responseBody
      *
      * @return string
      */
-    private function generateHTMLTable(?array $objects = [], ?array $mapping = null, ?string $tableCSSClass = null, string $configId): string
+    private function generatePaginationHTML(string $configId): string
     {
-        if (empty($objects) || isset($objects[0]) === false) {
+        $paginationHTML = "<div class=\"table-pagination\">";
+        $paginationHTML .= "<a id=\"tablePaginationPrevious{$configId}\" class=\"table-pagination-previous\" href=\"#\"><span class=\"dashicons dashicons-arrow-left-alt2\"></span> Vorige</a>";
+        $paginationHTML .= "<a id=\"tablePaginationCurrent{$configId}\" class=\"table-pagination-current\" href=\"#\">1</a>";
+        $paginationHTML .= "<a id=\"tablePaginationNext{$configId}\" class=\"table-pagination-next\" href=\"#\">Volgende <span class=\"dashicons dashicons-arrow-right-alt2\"></span></a>";
+        $paginationHTML .= "</div>";
+
+        return $paginationHTML;
+    }
+
+    /**
+     * Create a html table for the fetched objects.
+     *
+     * @param array       $responseBody
+     * @param array|null  $mapping
+     * @param string|null $tableCSSClass
+     * @param string      $configId
+     *
+     * @return string
+     */
+    private function generateHTMLTable(string $configId, ?array $responseBody = [], ?array $mapping = null, ?string $tableCSSClass = null, ?bool $refetchData = false): string
+    {
+        // For when refetching data and no results are found with given options.
+        if ($refetchData === true && isset($responseBody['results'][0]) === false) {
+            return ' ';
+        }
+
+        if (array_key_exists('results', $responseBody) === false || isset($responseBody['results'][0]) === false) {
             return '<div>' . esc_html__('Er ging iets fout met het ophalen van data.', 'objecttableaddon') . '</div>';
         }
 
+
         $filteredHeaders = [];
-        $tableHeaderRow  = $this->createTableHeader($objects, $mapping, $filteredHeaders, $configId);
-        $tableBodyRows   = $this->createTableRows($objects, $filteredHeaders);
+        $tableHeaderRow  = $this->createTableHeader($filteredHeaders, $configId, $responseBody['results'], $mapping);
+        $tableBodyRows   = $this->createTableRows($filteredHeaders, $responseBody['results']);
 
         if ($tableCSSClass === null) {
             $tableCSSClass = "table-container";
         }
 
-        $tableHtml = "<div><input type=\"text\" id=\"searchInput{$configId}\" class=\"search-input\" placeholder=\"Zoeken...\" \><table class=\"$tableCSSClass\" id=\"objectTable$configId\"><thead>$tableHeaderRow </thead><tbody> $tableBodyRows</tbody></table></div>";
+        $paginationHTML = $this->generatePaginationHTML($configId);
 
-        return $tableHtml;
+        $tableHTML = "<div class=\"$tableCSSClass\">";
+        $tableHTML .= "<input type=\"text\" id=\"searchInput{$configId}\" class=\"search-input\" placeholder=\"Zoeken...\" \>";
+        $tableHTML .= "<table class=\"object-table\" id=\"objectTable$configId\">";
+        $tableHTML .= "<thead>$tableHeaderRow</thead>";
+        $tableHTML .= "<tbody>$tableBodyRows</tbody>";
+        $tableHTML .= "</table>{$paginationHTML}</div>";
+
+        return $tableHTML;
     }
 
-    private function createTableHeader(?array &$objects = [], ?array $mapping = null, array &$filteredHeaders, string $configId): string
+    private function createTableHeader(array &$filteredHeaders, string $configId, ?array &$objects = [], ?array $mapping = null): string
     {
         // Initial filtering of headers
         $headers = array_keys($objects[0]);
@@ -227,7 +283,7 @@ class ObjectTablePluginShortcodes
         return $tableHeaderRow;
     }
 
-    private function createTableRows(?array $objects = [], array $filteredHeaders): string
+    private function createTableRows(array $filteredHeaders, ?array $objects = []): string
     {
         $tableBodyRows = '';
         foreach ($objects as $object) {
