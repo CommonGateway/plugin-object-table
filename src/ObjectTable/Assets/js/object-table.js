@@ -5,6 +5,7 @@ jQuery(document).ready(function($) {
     // Function to perform the AJAX call.
     function updateTable(configId, page) {
         $('#searchInput' + configId).prop('disabled', true);
+        $('#searchButton' + configId).prop('disabled', true);
         $('table').css('cursor', 'wait');
         $('#tablePagination' + configId).css('cursor', 'loading');
 
@@ -57,6 +58,7 @@ jQuery(document).ready(function($) {
                 $('table').css('cursor', 'default');
                 $('#tablePagination' + configId).css('cursor', 'default');
                 $('#searchInput' + configId).prop('disabled', false);
+                $('#searchButton' + configId).prop('disabled', false);
 
             }
         });
@@ -96,20 +98,20 @@ jQuery(document).ready(function($) {
 
     var searchTimeout;
 
-    $('.search-input').on('input', function() {
+    $('.search-button').on('click', function() {
         var inputId = $(this).attr('id'); 
-        var matches = inputId.match(/searchInput(\d+)/); 
+        var matches = inputId.match(/searchButton(\d+)/); 
 
         // Clear any existing timeout to reset the timer.
-        clearTimeout(searchTimeout);
+        // clearTimeout(searchTimeout);
 
         if (matches) {
             var configId = matches[1];
 
             // Set a new timeout
-            searchTimeout = setTimeout(function() {
-                updateTable(configId); 
-            }, 500); 
+            // searchTimeout = setTimeout(function() {
+            updateTable(configId); 
+            // }, 500); 
         }
     });
 
