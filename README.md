@@ -1,4 +1,4 @@
-# Objecten Tabelen
+# Objecten Tabellen
 Het publiceren van dynamische tabellen in WordPress aan de hand van de Overige Objecten Standaard van de VNG (Vereniging van Nederlandse Gemeenten) stelt gemeenten in staat om eenvoudig en efficiënt gegevens uit hun datawarehouse te publiceren op hun websites. 
 Door gebruik te maken van deze standaard, kunnen gemeenten gestructureerde data naadloos integreren in hun WordPress-sites, waarbij de gegevens dynamisch worden bijgewerkt om actuele en accurate informatie weer te geven. 
 Dit proces automatiseert de dataflow, vermindert de kans op fouten, en zorgt voor consistentie in de gegevenspresentatie, waardoor burgers toegang krijgen tot betrouwbare en up-to-date informatie.
@@ -28,7 +28,7 @@ Het stelt de plugin in staat om data dynamisch te verkrijgen en bij te werken, w
 De gateway zorgt voor een gestroomlijnde en beveiligde dataflow, wat bijdraagt aan de betrouwbaarheid en efficiëntie van de plugin.
 
 ### De Common Gateway configureren ###
-Om gebruik te maken van de Common Gateway als Overige Objecten Registratie voor de objecten tabel plugin moet je een aantal dingen in de Common Gateway op de juiste manier configureren.
+Om gebruik te maken van de Common Gateway als Overige Objecten Registratie voor de objecten tabellen plugin moet je een aantal dingen in de Common Gateway op de juiste manier configureren.
 Na [installeren van de Common Gateway](https://commongateway.readthedocs.io/en/latest/Installation/) is ook de Gateway UI beschikbaar. Via de Gateway UI kunnen we een aantal dingen configureren.
 
 Als eerste willen we een Schema configureren via -> `Schemas` -> `Add Schema` (Klik [hier](https://commongateway.github.io/CoreBundle/pages/Features/Schemas) voor meer informatie over Schemas).\
@@ -42,7 +42,7 @@ Deze velden kunnen later als kolommen getoond worden in een objecten tabel.
 > **Opmerking:**
 > Als je later via de Gateway UI een excel bestand van objecten wilt kunnen importeren is het verstandig om hier alleen velden van type = String toe te voegen aan je Schema.
 
-Om te regelen dat de objecten tabel plugin via een API URL objecten uit de gateway kan ophalen moeten we een Endpoint toevoegen aan de Gateway via -> `Endpoints` -> `Add Endpoint` (Klik [hier](https://commongateway.github.io/CoreBundle/pages/Features/Endpoints) voor meer informatie over Endpoints).\
+Om te regelen dat de objecten tabellen plugin via een API URL objecten uit de gateway kan ophalen moeten we een Endpoint toevoegen aan de Gateway via -> `Endpoints` -> `Add Endpoint` (Klik [hier](https://commongateway.github.io/CoreBundle/pages/Features/Endpoints) voor meer informatie over Endpoints).\
 Maak een Endpoint aan voor elke Schema die je hebt toegevoegd. Geef elk Endpoint een naam, unieke reference (url zoals: https://jouwDomein.nl/naamVanJouwEndpoint.endpoint.json), selecteer de Schema waarvoor je het Endpoint maakt en vink bij Methods "GET" aan.\
 Path en Path Regex bepalen hoe je Endpoint er uiteindelijk uit ziet, hier volgt een voorbeeld voor deze velden:
 
