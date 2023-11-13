@@ -58,10 +58,10 @@ Meer informatie over deze functionaliteit kun je [hier](https://commongateway.gi
 Via de Gateway UI kun je via -> `Import and upload` bestanden uploaden. Hier onder volgen een aantal punten om op te letten bij het inladen van objecten via een excel bestand:
 - Voordat je een excel bestand import, zorg er voor dat in je excel sheet een kolom aanwezig is met een unieke identificatie voor elke regel / object (kan zo simpel zijn als nummering 1,2,3 etc.). 
 Voeg de naam van deze kolom toe als Property aan je Schema en aan de mapping die je gebruikt voor importeren:`'_id' : 'naamVanDeKolom'`. 
-Hierdoor kan je meerdere keren het zelfde bestand uploaden zonder dat er dubbelen objecten ontstaan.
+Hierdoor kan je meerdere keren het zelfde bestand uploaden zonder dat er dubbele objecten ontstaan.
 - Voordat je een excel bestand import, zorg dat je deze hebt opgeslagen met het juiste tabblad open.
 Alleen de gegevens uit dit tabblad worden gebruikt voor het importeren van objecten.
-- Voor optimale performance/ervaring raden we voor nu aan niet meer dan 300 tot 500 objecten per tabblad tegelijk in te laden (meer is zeker wel mogelijk en kan je ook zeker proberen, maar het kan zijn dat de Gateway UI dit niet zo leuk vind).
+- Voor optimale performance/ervaring raden we voor nu aan niet meer dan 300 tot 500 objecten per tabblad tegelijk in te laden (meer is mogelijk, maar de kans dat hierbij de browser vastloopt wordt groter naarmate het aantal objecten dat ingeladen moet worden stijgt).
 - Check altijd na het inladen of alle objecten die je wilde inladen aanwezig zijn, is dit niet het geval. 
 Probeer dan nog eens precies dezelfde gegevens in te laden. (of als je weet welke objecten ontbreken kun je ook alleen deze specifieke objecten te selecteren).
 
