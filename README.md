@@ -63,7 +63,7 @@ Hierdoor kan je meerdere keren het zelfde bestand uploaden zonder dat er dubbele
 Alleen de gegevens uit dit tabblad worden gebruikt voor het importeren van objecten.
 - Voor optimale performance/ervaring raden we voor nu aan niet meer dan 300 tot 500 objecten per tabblad tegelijk in te laden (meer is mogelijk, maar de kans dat hierbij de browser vastloopt wordt groter naarmate het aantal objecten dat ingeladen moet worden stijgt).
 - Check altijd na het inladen of alle objecten die je wilde inladen aanwezig zijn, is dit niet het geval. 
-Probeer dan nog eens precies dezelfde gegevens in te laden. (of als je weet welke objecten ontbreken kun je ook alleen deze specifieke objecten te selecteren).
+Probeer dan nog eens precies dezelfde gegevens in te laden. (of als je weet welke objecten ontbreken kun je ook alleen deze specifieke objecten selecteren).
 
 ## Bijdragen en Ondersteuning
 Voor bijdragen en ondersteuning volgen we de spelregels van de Foundation for Public Code. 
