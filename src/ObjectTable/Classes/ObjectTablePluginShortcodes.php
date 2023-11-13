@@ -193,9 +193,9 @@ class ObjectTablePluginShortcodes
     private function generatePaginationHTML(string $configId): string
     {
         $paginationHTML = "<div class=\"table-pagination\">";
-        $paginationHTML .= "<a id=\"tablePaginationPrevious{$configId}\" class=\"table-pagination-previous\" href=\"#\">Vorige</a>";
-        $paginationHTML .= "<a id=\"tablePaginationCurrent{$configId}\" class=\"table-pagination-current\" href=\"#\">1</a>";
-        $paginationHTML .= "<a id=\"tablePaginationNext{$configId}\" class=\"table-pagination-next\" href=\"#\">Volgende</a>";
+        $paginationHTML .= "<a id=\"tablePaginationPrevious{$configId}\" aria-label=\"Previous table page\" class=\"table-pagination-previous\" href=\"#\">Vorige</a>";
+        $paginationHTML .= "<a id=\"tablePaginationCurrent{$configId}\" aria-label=\"Current table page\" class=\"table-pagination-current\" href=\"#\">1</a>";
+        $paginationHTML .= "<a id=\"tablePaginationNext{$configId}\" aria-label=\"Next table page\" class=\"table-pagination-next\" href=\"#\">Volgende</a>";
         $paginationHTML .= "</div>";
 
         return $paginationHTML;
@@ -222,7 +222,6 @@ class ObjectTablePluginShortcodes
             return '<div>' . esc_html__('Er ging iets fout met het ophalen van data.', 'objecttableaddon') . '</div>';
         }
 
-
         $filteredHeaders = [];
         $tableHeaderRow  = $this->createTableHeader($filteredHeaders, $configId, $responseBody['results'], $mapping);
         $tableBodyRows   = $this->createTableRows($filteredHeaders, $responseBody['results']);
@@ -234,8 +233,9 @@ class ObjectTablePluginShortcodes
         $paginationHTML = $this->generatePaginationHTML($configId);
 
         $tableHTML = "<div class=\"$tableCSSClass\">";
-        $tableHTML .= "<input type=\"text\" id=\"searchInput{$configId}\" class=\"search-input\" placeholder=\"Zoeken...\" \>";
-        $tableHTML .= "<table class=\"object-table\" id=\"objectTable$configId\">";
+        $tableHTML .= "<input aria-label=\"Search\" type=\"text\" id=\"searchInput{$configId}\" class=\"search-input\" placeholder=\"Zoeken...\" \>";
+        $tableHTML .= "<button aria-label=\"Search button\" id=\"searchButton{$configId}\" class=\"search-button\" >Zoek</button>";
+        $tableHTML .= "<table aria-label=\"Object table\" class=\"object-table\" id=\"objectTable$configId\">";
         $tableHTML .= "<thead>$tableHeaderRow</thead>";
         $tableHTML .= "<tbody>$tableBodyRows</tbody>";
         $tableHTML .= "</table>{$paginationHTML}</div>";

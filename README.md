@@ -9,7 +9,7 @@ Deze aanpak biedt aanzienlijke voordelen voor zowel gemeenten als burgers. Voor 
 3. Ga naar Instellingen -> ObjectTabel-pagina.
 4. Voeg een configuratie toe met API URL en API KEY.
 5. U kunt ervoor kiezen om een CSS-klasse toe te voegen aan de tabel als er een is.
-6. U kunt kiezen om een optionele mapping JSON toe te voegen, bijvoorbeeld {"name": "naam"}.
+6. U kunt kiezen om een optionele mapping JSON toe te voegen, bijvoorbeeld {"name": "naam"}. Een mapping kan handig zijn als je minder data per object wilt tonen zoals alleen de naam, of bijvoorbeeld helemaal andere keys in de tabel header wilt tonen dan hoe het oorspronkelijk in het object staat.
 7. Voeg een shortcode toe aan een gewenste pagina zoals: [object-tabel configId="2"], waarbij configId de id is van een van uw configuraties op de instellingenpagina.
 8. Bij het bezoeken van de pagina zal de shortcode code activeren die de gegevens ophaalt en een tabel weergeeft.
 

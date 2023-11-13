@@ -1,6 +1,6 @@
 {
   "name": "object-table",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Object table plugin",
   "author": "conduction.nl",
   "require" : {
