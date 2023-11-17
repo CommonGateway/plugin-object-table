@@ -48,7 +48,8 @@ jQuery(document).ready(function($) {
             success: function(data) {
                 $('#objectTable' + configId  + ' tbody').empty().html(data.data.html);
                 $('th').removeClass('asc desc'); 
-                $('#table' + configId + 'Header_' + currentSort[configId].column).addClass(currentSort[configId].order);
+
+                $('#table' + configId + 'Header_' + currentSort[configId].column.replace(/ /g, '_')).addClass(currentSort[configId].order);
                 if (page !== currentPage[configId]) {
                     $('#tablePaginationCurrent' + configId).html(page);
                     currentPage[configId] = page;
@@ -125,7 +126,9 @@ jQuery(document).ready(function($) {
             var order = $(this).hasClass('asc') ? 'desc' : 'asc';
 
             // Update currentSort with the new order.
-            currentSort[configId] = { column: column, order: order };
+            
+            var thColumn = column.replace(/_/g, ' ');
+            currentSort[configId] = { column: thColumn, order: order };
 
             updateTable(configId);
         }

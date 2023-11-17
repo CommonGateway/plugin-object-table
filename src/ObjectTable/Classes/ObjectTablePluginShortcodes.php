@@ -276,7 +276,8 @@ class ObjectTablePluginShortcodes
         $tableHeaderRow = '<tr>';
         $thId = "table{$configId}Header_";
         foreach ($filteredHeaders as $header) {
-            $tableHeaderRow .= "<th id=\"{$thId}{$header}\">{$header}<span class=\"dashicons dashicons-sort\"></span></th>";
+            $idHeader = str_replace(' ', '_', $header);
+            $tableHeaderRow .= "<th id=\"{$thId}{$idHeader}\">{$header}<span class=\"dashicons dashicons-sort\"></span></th>";
         }
         $tableHeaderRow .= '</tr>';
 
