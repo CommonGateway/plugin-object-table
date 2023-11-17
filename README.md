@@ -56,14 +56,18 @@ De Common Gateway ondersteunt het toevoegen van objecten door middel van bijvoor
 Meer informatie over deze functionaliteit kun je [hier](https://commongateway.github.io/CoreBundle/pages/Features/ImportExport) terug vinden.
 
 Via de Gateway UI kun je via -> `Import and upload` bestanden uploaden. Hier onder volgen een aantal punten om op te letten bij het inladen van objecten via een excel bestand:
+- Bij het importeren gebruikt de Gateway alleen de gegevens uit één tabblad.
+Voordat je een excel bestand import, zorg dat je deze hebt opgeslagen met het tabblad geselecteerd/open waarvan je de gegevens wilt importeren.
+Alleen de gegevens uit dit tabblad worden gebruikt voor het aanmaken van objecten.
+Als je meerdere tabbladen met gegevens wilt uploaden, zal je dus meerdere keren het bestand opnieuw moeten opslaan met een ander tabblad geselecteerd/open.
 - Voordat je een excel bestand import, zorg er voor dat in je excel sheet een kolom aanwezig is met een unieke identificatie voor elke regel / object (kan zo simpel zijn als nummering 1,2,3 etc.). 
 Voeg de naam van deze kolom toe als Property aan je Schema en aan de mapping die je gebruikt voor importeren:`'_id' : 'naamVanDeKolom'`. 
 Hierdoor kan je meerdere keren het zelfde bestand uploaden zonder dat er dubbele objecten ontstaan.
-- Voordat je een excel bestand import, zorg dat je deze hebt opgeslagen met het juiste tabblad open.
-Alleen de gegevens uit dit tabblad worden gebruikt voor het importeren van objecten.
 - Voor optimale performance/ervaring raden we voor nu aan niet meer dan 300 tot 500 objecten per tabblad tegelijk in te laden (meer is mogelijk, maar de kans dat hierbij de browser vastloopt wordt groter naarmate het aantal objecten dat ingeladen moet worden stijgt).
 - Check altijd na het inladen of alle objecten die je wilde inladen aanwezig zijn, is dit niet het geval. 
 Probeer dan nog eens precies dezelfde gegevens in te laden. (of als je weet welke objecten ontbreken kun je ook alleen deze specifieke objecten selecteren).
+
+Voor een voorbeeld van een excel sheet die aan deze punten voldoet [klik hier](https://docs.google.com/spreadsheets/d/145fAuSz026fIB8VshOYYUCEzi6rfAfPO/edit#gid=1344380644).
 
 ## Bijdragen en Ondersteuning
 Voor bijdragen en ondersteuning volgen we de spelregels van de Foundation for Public Code. 
