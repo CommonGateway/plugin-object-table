@@ -40,6 +40,7 @@
     font-size: 16px;
     background-color: white; 
     color: #555;
+    max-height: 20px;
 }
 
 .table-container .search-input:disabled {
@@ -58,6 +59,14 @@
 .table-pagination {
     display: inline-block;
     margin-top: 5px;
+}
+
+.table-pagination a:first-child {
+    visibility: hidden;
+}
+
+.table-pagination-first .table-pagination-previous, .table-pagination-first .table-pagination-first { 
+    visibility: hidden;
 }
   
 .table-pagination a {
@@ -154,6 +163,7 @@
 .barendrecht-table-container .table-pagination .table-pagination-current {
     background-color: #032d57;
     color: #ffffff;
+    border-radius: 7px;
 }
 
 .barendrecht-table-container .table-pagination-previous, .barendrecht-table-container .table-pagination-next {
@@ -162,12 +172,12 @@
 }
 
 
-.barendrecht-table-container .table-pagination-previous:hover, .barendrecht-table-container .table-pagination-next:hover {
+.barendrecht-table-container .table-pagination-previous:hover, .barendrecht-table-container .table-pagination-previous-number:hover, .barendrecht-table-container .table-pagination-next:hover, .barendrecht-table-container .table-pagination-next-number:hover, .barendrecht-table-container .table-pagination-last:hover, .barendrecht-table-container .table-pagination-first:hover {
     background-color: #032d57;
     color: #ffffff;
 }
 
-.barendrecht-table-container .table-pagination-previous, .barendrecht-table-container .table-pagination-next, .barendrecht-table-container .table-pagination-current {
+.barendrecht-table-container .table-pagination-previous, .barendrecht-table-container .table-pagination-next, .barendrecht-table-container .table-pagination-last, .barendrecht-table-container .table-pagination-first, .barendrecht-table-container .table-pagination-next-number, .barendrecht-table-container .table-pagination-previous-number {
     min-width: 45px;
     min-height: 45px;
     display: flex;
@@ -179,6 +189,16 @@
     border: 0;
     border-radius: 7px;
     transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+.barendrecht-table-pagination a:first-child {
+    visibility: hidden;
+}
+
+.barendrecht-table-container .table-pagination-previous,
+.barendrecht-table-container .table-pagination-first,
+.barendrecht-table-container .table-pagination-previous-number {
+    visibility: hidden;
 }
 
 .barendrecht-table-container .search-input {
@@ -217,5 +237,5 @@
 }
 
 .barendrecht-table-container .search-button:focus {
-    outline: none; /* Removes the default focus outline */
+    outline: none;
 }

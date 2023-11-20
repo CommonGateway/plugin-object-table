@@ -52,7 +52,39 @@ jQuery(document).ready(function($) {
                 $('#table' + configId + 'Header_' + currentSort[configId].column.replace(/ /g, '_')).addClass(currentSort[configId].order);
                 if (page !== currentPage[configId]) {
                     $('#tablePaginationCurrent' + configId).html(page);
+                    $('#tablePaginationPreviousNumber' + configId).html((page-1));
+                    $('#tablePaginationNextNumber' + configId).html((page+1));
                     currentPage[configId] = page;
+                }
+
+                // Hide last button if on second last page.
+                if (data.data.totalPages == page) {
+                    $('#tablePaginationNext' + configId).css('visibility', 'hidden');
+                    $('#tablePaginationNextNumber' + configId).css('visibility', 'hidden');
+                } else {
+                    $('#tablePaginationNext' + configId).css('visibility', 'visible');
+                    $('#tablePaginationNextNumber' + configId).css('visibility', 'visible');
+                }
+
+                // Hide last button if on second last page or last page.
+                if ((data.data.totalPages-1) == page || data.data.totalPages == page) {
+                    $('#tablePaginationLast' + configId).css('visibility', 'hidden');
+                } else {
+                    $('#tablePaginationLast' + configId).css('visibility', 'visible');
+                }
+
+                if (page > 1) {
+                    $('#tablePaginationPrevious' + configId).css('visibility', 'visible');
+                    $('#tablePaginationPreviousNumber' + configId).css('visibility', 'visible');
+                } else {
+                    $('#tablePaginationPrevious' + configId).css('visibility', 'hidden');
+                    $('#tablePaginationPreviousNumber' + configId).css('visibility', 'hidden');
+                }
+
+                if (page > 2) {
+                    $('#tablePaginationFirst' + configId).css('visibility', 'visible');
+                } else {
+                    $('#tablePaginationFirst' + configId).css('visibility', 'hidden');
                 }
             },
             complete: function() {
@@ -70,7 +102,7 @@ jQuery(document).ready(function($) {
         e.preventDefault(); // Prevent the default anchor behavior
 
         var clickedId = $(this).attr('id');
-        var configIdMatch = clickedId.match(/tablePagination(Previous|Next|Current)(\d+)/);
+        var configIdMatch = clickedId.match(/tablePagination(Previous|PreviousNumber|First|Next|NextNumber|Last|Current)(\d+)/);
         var configId, newPage;
 
         // Handle previous and next buttons
@@ -82,19 +114,25 @@ jQuery(document).ready(function($) {
             }
 
             // Determine the new page number based on the clicked button
-            if (configIdMatch[1] === 'Previous') {
+            if (configIdMatch[1] === 'Previous' || configIdMatch[1] === 'PreviousNumber') {
                 newPage = currentPage[configId] - 1;
+            }
+            if (configIdMatch[1] === 'First') {
+                newPage = 1;
             }
             if (configIdMatch[1] === 'Current') {
                 newPage = currentPage[configId];
             }
-            if (configIdMatch[1] === 'Next') {
+            if (configIdMatch[1] === 'Next' || configIdMatch[1] === 'NextNumber') {
                 newPage = currentPage[configId] + 1;
             }
-        }
+            if (configIdMatch[1] === 'Last') {
+                newPage = parseInt($(this).html());
+            }
 
-        // Refresh the table
-        updateTable(configId, newPage);
+            // Refresh the table
+            updateTable(configId, newPage);
+        }
     });
 
     var searchTimeout;

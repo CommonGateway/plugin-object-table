@@ -78,7 +78,8 @@ class ObjectTablePluginShortcodes
         }
         $tableCSSClass = isset($config['cssclass']) ? $config['cssclass'] : null;
 
-        $html = $this->generateHTMLTable($configId, $decodedBody, $mapping, $tableCSSClass, true);
+        $totalPages = 0;
+        $html = $this->generateHTMLTable($configId, $decodedBody, $mapping, $tableCSSClass, true, $totalPages);
 
         // For when no results are found with given options.
         if ($html === ' ') {
@@ -97,7 +98,7 @@ class ObjectTablePluginShortcodes
         $newRows = $newRows[0];
 
         // Send JSON response back to AJAX call
-        wp_send_json_success(['html' => $newRows]);
+        wp_send_json_success(['html' => $newRows, 'totalPages' => $totalPages]);
     }
 
     /**
@@ -159,7 +160,8 @@ class ObjectTablePluginShortcodes
         $url .= "&page={$page}";
 
         $data = wp_remote_get($url, [
-            'headers'     => ['Content-Type' => 'application/json;', 'Authorization' => $apiKey]
+            'headers'     => ['Content-Type' => 'application/json;', 'Authorization' => $apiKey],
+            'timeout' => 10
         ]);
 
         if (is_wp_error($data)) {
@@ -190,12 +192,22 @@ class ObjectTablePluginShortcodes
      *
      * @return string
      */
-    private function generatePaginationHTML(string $configId): string
+    private function generatePaginationHTML(string $configId, int $totalPages): string
     {
         $paginationHTML = "<div class=\"table-pagination\">";
-        $paginationHTML .= "<a id=\"tablePaginationPrevious{$configId}\" aria-label=\"Previous table page\" class=\"table-pagination-previous\" href=\"#\">Vorige</a>";
-        $paginationHTML .= "<a id=\"tablePaginationCurrent{$configId}\" aria-label=\"Current table page\" class=\"table-pagination-current\" href=\"#\">1</a>";
-        $paginationHTML .= "<a id=\"tablePaginationNext{$configId}\" aria-label=\"Next table page\" class=\"table-pagination-next\" href=\"#\">Volgende</a>";
+        $paginationHTML .= "<a id=\"tablePaginationPrevious{$configId}\" aria-label=\"Vorige tabel pagina\" class=\"table-pagination-previous\" href=\"#\">Vorige</a>";
+        $paginationHTML .= "<a id=\"tablePaginationFirst{$configId}\" aria-label=\"Eerste tabel pagina\" class=\"table-pagination-first\" href=\"#\">1</a>";
+        $paginationHTML .= "<a id=\"tablePaginationPreviousNumber{$configId}\" aria-label=\"Vorig getal tabel pagina\" class=\"table-pagination-previous-number\" href=\"#\">1</a>";
+        $paginationHTML .= "<a id=\"tablePaginationCurrent{$configId}\" aria-label=\"Huidige tabel pagina\" class=\"table-pagination-current\" href=\"#\" disabled>1</a>";
+        if ($totalPages > 2) {
+        }
+        if ($totalPages > 1) {
+            $paginationHTML .= "<a id=\"tablePaginationNextNumber{$configId}\" aria-label=\"Volgend getal tabel pagina\" class=\"table-pagination-next-number\" href=\"#\">2</a>";
+            if ($totalPages !== 2) {
+                $paginationHTML .= "<a id=\"tablePaginationLast{$configId}\" aria-label=\"Laatste tabel pagina\" class=\"table-pagination-last\" href=\"#\">$totalPages</a>";
+            }
+            $paginationHTML .= "<a id=\"tablePaginationNext{$configId}\" aria-label=\"Volgende tabel pagina\" class=\"table-pagination-next\" href=\"#\">Volgende</a>";
+        }
         $paginationHTML .= "</div>";
 
         return $paginationHTML;
@@ -211,7 +223,7 @@ class ObjectTablePluginShortcodes
      *
      * @return string
      */
-    private function generateHTMLTable(string $configId, ?array $responseBody = [], ?array $mapping = null, ?string $tableCSSClass = null, ?bool $refetchData = false): string
+    private function generateHTMLTable(string $configId, ?array $responseBody = [], ?array $mapping = null, ?string $tableCSSClass = null, ?bool $refetchData = false, ?int &$totalPages = null): string
     {
         // For when refetching data and no results are found with given options.
         if ($refetchData === true && isset($responseBody['results'][0]) === false) {
@@ -230,12 +242,13 @@ class ObjectTablePluginShortcodes
             $tableCSSClass = "table-container";
         }
 
-        $paginationHTML = $this->generatePaginationHTML($configId);
+        $totalPages = $responseBody['pages'];
+        $paginationHTML = $this->generatePaginationHTML($configId, $totalPages);
 
         $tableHTML = "<div class=\"$tableCSSClass\">";
-        $tableHTML .= "<input aria-label=\"Search\" type=\"text\" id=\"searchInput{$configId}\" class=\"search-input\" placeholder=\"Zoeken...\" \>";
-        $tableHTML .= "<button aria-label=\"Search button\" id=\"searchButton{$configId}\" class=\"search-button\" >Zoek</button>";
-        $tableHTML .= "<table aria-label=\"Object table\" class=\"object-table\" id=\"objectTable$configId\">";
+        $tableHTML .= "<input aria-label=\"Zoeken\" type=\"text\" id=\"searchInput{$configId}\" class=\"search-input\" placeholder=\"Zoeken...\" \>";
+        $tableHTML .= "<button aria-label=\"Zoek knop\" id=\"searchButton{$configId}\" class=\"search-button\" >Zoek</button>";
+        $tableHTML .= "<table aria-label=\"Objecten tabel\" class=\"object-table\" id=\"objectTable$configId\">";
         $tableHTML .= "<thead>$tableHeaderRow</thead>";
         $tableHTML .= "<tbody>$tableBodyRows</tbody>";
         $tableHTML .= "</table>{$paginationHTML}</div>";
