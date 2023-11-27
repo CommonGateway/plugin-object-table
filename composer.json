@@ -1,5 +1,21 @@
 {
+    "name": "common-gateway/plugin-object-table",
+    "description": "A WordPress plugin for ObjectTables, this bundle contains logic for getting data from an API and showing it in a table.",
+    "type": "wordpress-plugin",
+    "keywords": [
+        "commongateway",
+        "common",
+        "gateway",
+        "conduction",
+        "wordpress",
+        "wordpress-plugin",
+        "plugin-object-table",
+        "object-table",
+        "objecttable"
+    ],
+    "homepage": "https://commongateway.nl",
+    "license": "EUPL-1.2",
     "require": {
-        "php": "^7.4.0"
+        "php": ">=7.4.0"
     }
 }
